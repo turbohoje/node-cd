@@ -1,0 +1,40 @@
+pipeline:
+
+  build:
+    image: ecr.vip.ebayc3.com/newpro/cd:latest
+    run: publish
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      event: [push, pull_request, tag]
+
+  rollout_dev:
+    image: ecr.vip.ebayc3.com/newpro/cd:latest
+    run: rollout
+    env: dev
+    team: infra
+    initiative: n2
+    when:
+      event: [push, pull_request, tag]
+      branch: drone
+
+  rollout_test:
+    image: ecr.vip.ebayc3.com/newpro/cd:latest
+    run: rollout
+    env: test
+    team: infra
+    initiative: n2
+    when:
+      event: [push, pull_request, tag]
+      branch: drone
+
+  rollout_prod:
+    image: ecr.vip.ebayc3.com/newpro/cd:latest
+    run: rollout
+    env: prod
+    team: infra
+    when:
+      branch: master
+      environment: prod
+      event: deployment

@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: node-cd-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: node-cd
+        release: stable
+    spec:
+      containers:
+        - name: node-cd
+          image: gcr.io/ebay-n/node-cd:local
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3003
+              name: http-port
+          env:
